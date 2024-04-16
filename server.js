@@ -6,6 +6,10 @@ const cors = require('cors');
 const mysql = require('mysql');
 const foodAndCo = require('./foodandco');
 const currentWeekNumber = require('current-week-number');
+const DBMigrate = require('db-migrate');
+
+const dbMigrate = DBMigrate.getInstance(true);
+dbMigrate.up();
 
 const app = express();
 
