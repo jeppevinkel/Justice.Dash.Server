@@ -55,8 +55,10 @@ function run() {
     app.use('/images', express.static('images'));
 
     app.get('/menu', async (req, res) => {
-        connectionPool.query('SELECT * FROM menus INNER JOIN images ON menus.date = images.menu_date WHERE menus.date >= CURDATE() ORDER BY date ASC', function (error, results) {
+        connectionPool.query('SELECT * FROM menus LEFT OUTER JOIN images ON menus.date = images.menu_date WHERE menus.date >= CURDATE() ORDER BY date ASC', function (error, results) {
             if (error) throw error;
+
+            console.log('Found', results.length, 'menus');
 
             const menu = results.map(it => {
                 return {
