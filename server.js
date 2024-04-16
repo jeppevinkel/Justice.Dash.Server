@@ -18,19 +18,31 @@ function run() {
 
     const app = express();
 
-    const connection = mysql.createConnection({
+    const connectionPool = mysql.createPool({
         host: process.env.MYSQL_HOST,
         user: process.env.MYSQL_USER,
         password: process.env.MYSQL_PASS,
         database: process.env.MYSQL_DATABASE,
+        connectionLimit: 4,
     });
 
-    connection.connect(function (err) {
-        if (err) throw err;
-        console.log('MYSQL Connected.');
+    // connectionPool.connect(function (err) {
+    //     if (err) throw err;
+    //     console.log('MYSQL Connected.');
+    // });
+
+    connectionPool.on('connection', function (connection) {
+        console.log('DB Connection established');
+
+        connection.on('error', function (err) {
+            console.error(new Date(), 'MySQL error', err.code);
+        });
+        connection.on('close', function (err) {
+            console.error(new Date(), 'MySQL close', err);
+        });
     });
 
-    foodAndCo(connection);
+    foodAndCo(connectionPool);
 
     const corsOptions = {
         // origin: ['https://dash-cl.jeppevinkel.com', 'http://localhost:3000'],
@@ -42,8 +54,8 @@ function run() {
 
     app.use('/images', express.static('images'));
 
-    app.get('/menu', (req, res) => {
-        connection.query('SELECT * FROM menus INNER JOIN images ON menus.date = images.menu_date WHERE menus.date >= CURDATE() ORDER BY date ASC', function (error, results) {
+    app.get('/menu', async (req, res) => {
+        connectionPool.query('SELECT * FROM menus INNER JOIN images ON menus.date = images.menu_date WHERE menus.date >= CURDATE() ORDER BY date ASC', function (error, results) {
             if (error) throw error;
 
             const menu = results.map(it => {
@@ -68,7 +80,7 @@ function run() {
     });
 
     app.get('/surveillance', (req, res) => {
-        connection.query('SELECT * FROM surveillance WHERE week >= ?', [currentWeekNumber(undefined)], function (error, results) {
+        connectionPool.query('SELECT * FROM surveillance WHERE week >= ?', [currentWeekNumber(undefined)], function (error, results) {
             if (error) throw error;
 
             const returnObject = results.reduce((accumulative, current) => {
@@ -89,6 +101,6 @@ function run() {
     });
 
     app.once('closed', () => {
-        connection.end();
+        connectionPool.end();
     });
 }
