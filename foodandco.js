@@ -33,10 +33,6 @@ async function bulkUpdateFoodData(query) {
 async function fetchFoodData(query) {
     console.log(`Fetching menu items...`);
 
-    // const now = DateTime.now();
-    // const nextWeek = now.plus(Duration.fromObject({weeks: 1}));
-
-    // const timesToCheck = [now, nextWeek];
     let totalDays = 0;
 
     let dateToCheck = DateTime.now();
@@ -65,26 +61,6 @@ async function fetchFoodData(query) {
             dateToCheck = dateToCheck.plus(Duration.fromObject({weeks: 1}));
         }
     } while (dateToCheck !== null)
-
-    // for (const dateTime of timesToCheck) {
-    //     const res = await axios.default.get('https://www.shop.foodandco.dk/api/WeeklyMenu', {
-    //         params: {
-    //             restaurantId: 1089,
-    //             languageCode: 'da-DK',
-    //             date: dateTime.toFormat('yyyy-MM-dd'),
-    //         },
-    //     });
-    //
-    //     totalDays += res.data.days.length;
-    //
-    //     for (const day of res.data.days) {
-    //         try {
-    //            await query('INSERT INTO menus (date, day, food_name, week_number) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE day=IF(manual, day, ?), food_name=IF(manual, food_name, ?), week_number=IF(manual, week_number, ?)', [day.date, day.dayOfWeek, day.menus[0]?.menu, res.data.weekNumber, day.dayOfWeek, day.menus[0]?.menu, res.data.weekNumber]);
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //     }
-    // }
 
     console.log(`Found ${totalDays} menu items.`);
 }
