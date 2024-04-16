@@ -24,7 +24,7 @@ exports.up = function (db) {
             type: 'varchar(255)',
         },
         revised_prompt: {
-            type: 'varchar(255)',
+            type: 'longtext',
         },
         menu_date: {
             type: 'datetime',
