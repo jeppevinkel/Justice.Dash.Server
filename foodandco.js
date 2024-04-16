@@ -18,6 +18,8 @@ const fetchFoodDataInterval = 1440;
 function run(connection) {
     const query = util.promisify(connection.query).bind(connection);
 
+    fs.mkdir('./images').catch(err => console.error(err));
+
     bulkUpdateFoodData(query).then(_ => setTimeout(bulkUpdateFoodData, fetchFoodDataInterval * 60000, query));
     cleanImages(query).then(_ => setTimeout(cleanImages, fileCleanupInterval * 60000, query));
 }
@@ -56,11 +58,11 @@ async function fetchFoodData(query) {
         }
 
         if (res.data.days.length === 0) {
-            dateToCheck = null
+            dateToCheck = null;
         } else {
             dateToCheck = dateToCheck.plus(Duration.fromObject({weeks: 1}));
         }
-    } while (dateToCheck !== null)
+    } while (dateToCheck !== null);
 
     console.log(`Found ${totalDays} menu items.`);
 }
