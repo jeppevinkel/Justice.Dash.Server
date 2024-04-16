@@ -48,7 +48,7 @@ exports.up = function(db) {
     manual: {
       type: 'tinyint(1)',
       notNull: true,
-      default: 0
+      defaultValue: 0
     }
   });
 };
