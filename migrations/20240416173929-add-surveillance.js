@@ -24,6 +24,12 @@ exports.up = function (db) {
         week: {
             type: 'int',
             notNull: true,
+            primaryKey: true,
+        },
+        year: {
+            type: 'int',
+            notNull: true,
+            primaryKey: true,
         },
         responsible: {
             type: 'varchar(255)',
