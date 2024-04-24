@@ -7,6 +7,7 @@ const mysql = require('mysql');
 const foodAndCo = require('./foodandco');
 const currentWeekNumber = require('current-week-number');
 const DBMigrate = require('db-migrate');
+const adminRoutes = require('./adminRoutes');
 
 const dbMigrate = DBMigrate.getInstance(true);
 dbMigrate.up(() => {
@@ -56,7 +57,7 @@ function run() {
 
     app.get('/menu', async (req, res) => {
         connectionPool.query('SELECT * FROM menus LEFT OUTER JOIN images ON menus.date = images.menu_date WHERE menus.date >= CURDATE() ORDER BY date ASC', function (error, results) {
-            if (error) throw error;
+            if (error) return;
 
             console.log('Found', results.length, 'menus');
 
@@ -77,7 +78,7 @@ function run() {
                 };
             });
 
-            res.json({menu});
+            return res.json({menu});
         });
     });
 
@@ -94,9 +95,11 @@ function run() {
                 return accumulative;
             }, {});
 
-            res.json(returnObject);
+            return res.json(returnObject);
         });
     });
+
+    app.use(adminRoutes(connectionPool));
 
     app.listen(8000, () => {
         console.log(`Server is running on port 8000.`);
