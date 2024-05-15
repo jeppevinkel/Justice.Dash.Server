@@ -86,7 +86,7 @@ async function checkFoodContents(query, foodTypes) {
                             content: `Retten hedder "${result.food_name}"`,
                         },
                     ],
-                    model: 'gpt-4-0613',
+                    model: 'gpt-4o',
                 });
 
                 const response = completion.choices[0].message.content.toLowerCase();
@@ -122,7 +122,7 @@ async function correctFoodName(query) {
                         content: `Retten hedder "${result.food_name}"`,
                     },
                 ],
-                model: 'gpt-4-0613',
+                model: 'gpt-4o',
             });
 
             result.corrected_food_name = completion.choices[0].message.content;
@@ -158,7 +158,7 @@ async function describeFoodItems(query) {
                         content: `Retten hedder "${dishName}"`,
                     },
                 ],
-                model: 'gpt-4-0613',
+                model: 'gpt-4o',
             });
 
             result.food_description = completion.choices[0].message.content;
