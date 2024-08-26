@@ -207,11 +207,11 @@ async function cleanImages(query) {
         const results = await query('SELECT path FROM images');
         const referencedImages = results.map(it => it.path);
 
-        const files = await fs.readdir('./images');
-        const filesToDelete = files.filter(it => !referencedImages.includes(it));
+        const files = await fs.readdir('./images', {withFileTypes: true});
+        const filesToDelete = files.filter(it => !referencedImages.includes(it.name) && !it.isDirectory());
 
         for (const file of filesToDelete) {
-            await fs.rm(`./images/${file}`);
+            await fs.rm(`./images/${file.name}`);
         }
         console.log(`Deleted ${filesToDelete.length} unreferenced images.`);
     } catch (error) {

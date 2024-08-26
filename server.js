@@ -5,9 +5,11 @@ const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql');
 const foodAndCo = require('./foodandco');
+const domicilPhotos = require('./domicilPhotos');
 const currentWeekNumber = require('current-week-number');
 const DBMigrate = require('db-migrate');
 const adminRoutes = require('./adminRoutes');
+const {promises: fs} = require('fs');
 
 const dbMigrate = DBMigrate.getInstance(true);
 dbMigrate.up(() => {
@@ -44,6 +46,7 @@ function run() {
     });
 
     foodAndCo(connectionPool);
+    domicilPhotos();
 
     const corsOptions = {
         // origin: ['https://dash-cl.jeppevinkel.com', 'http://localhost:3000'],
@@ -52,6 +55,26 @@ function run() {
 
     app.use(cors(corsOptions));
     app.use(express.json());
+
+    app.use('/images/domicil/latest', async (req, res) => {
+        const files = await fs.readdir('./images/domicil', {withFileTypes: true});
+
+        files.sort((a, b) => {
+            const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+            const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+            if (nameA < nameB) {
+                return 1;
+            }
+            if (nameA > nameB) {
+                return -1;
+            }
+
+            // names must be equal
+            return 0;
+        })
+
+        return res.redirect(`/images/domicil/${files[0].name}`);
+    });
 
     app.use('/images', express.static('images'));
 
