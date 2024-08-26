@@ -73,7 +73,7 @@ function run() {
             return 0;
         })
 
-        return res.redirect(`/images/domicil/${files[0].name}`);
+        return res.redirect(`${process.env.PUBLIC_ADDRESS}/images/domicil/${files[0].name}`);
     });
 
     app.use('/images', express.static('images'));
