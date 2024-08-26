@@ -6,7 +6,7 @@ function run() {
     fs.mkdir('./images/domicil', {recursive: true}).catch(err => console.error(err));
 
     fetchImages().catch(err => console.error(err));
-    setInterval(fetchImages, 21600000);
+    setInterval(fetchImages, 7200000);
 }
 
 async function fetchImages() {
