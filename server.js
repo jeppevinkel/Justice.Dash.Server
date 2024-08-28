@@ -122,6 +122,12 @@ function run() {
         });
     });
 
+    app.get('/chartest', (req, res) => {
+        return res.json({
+            text: 'ae => æ, oe => ø, aa => å'
+        });
+    })
+
     app.use(adminRoutes(connectionPool));
 
     app.listen(8000, () => {
