@@ -25,12 +25,10 @@ async function fetchImages() {
 
 async function cleanPhotos(newPhotos) {
     const oldPhotos = (await fs.readdir('./images/domicil', {withFileTypes: true})).filter(it => it.isFile()).map(it => path.parse(it.name));
-    const newPhotoNames = newPhotos.map(it => it.imageUpdateDate);
+    const newPhotoNames = newPhotos.map(it => it.imageUpdateDate.toString());
     let recycled = 0;
 
-    console.log(newPhotoNames);
     for (const photo of oldPhotos) {
-        console.log('Checking to recycle', photo.name);
         if (!newPhotoNames.includes(photo.name)) {
             await fs.rename(`./images/domicil/${photo.base}`, `./images/domicil/recycle/${photo.base}`);
             recycled++;
