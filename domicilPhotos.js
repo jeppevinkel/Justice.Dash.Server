@@ -23,7 +23,7 @@ async function fetchImages() {
 }
 
 async function cleanPhotos(newPhotos) {
-    const oldPhotos = await fs.readdir('/images/domicil', {withFileTypes: false});
+    const oldPhotos = await fs.readdir('./images/domicil', {withFileTypes: false});
     const newPhotoNames = newPhotos.map(it => it.imageUpdateDate);
     let recycled = 0;
 
