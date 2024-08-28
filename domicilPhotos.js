@@ -1,6 +1,7 @@
 const GooglePhotosAlbum = require('google-photos-album-image-url-fetch');
 const axios = require('axios');
 const fs = require('fs').promises;
+const path = require('path');
 
 function run() {
     fs.mkdir('./images/domicil', {recursive: true}).catch(err => console.error(err));
@@ -23,13 +24,13 @@ async function fetchImages() {
 }
 
 async function cleanPhotos(newPhotos) {
-    const oldPhotos = (await fs.readdir('./images/domicil', {withFileTypes: true})).filter(it => it.isFile());
+    const oldPhotos = (await fs.readdir('./images/domicil', {withFileTypes: true})).filter(it => it.isFile()).map(it => path.parse(it.name));
     const newPhotoNames = newPhotos.map(it => it.imageUpdateDate);
     let recycled = 0;
 
     for (const photo of oldPhotos) {
-        if (!newPhotoNames.includes(photo.name.split('.')[0])) {
-            await fs.rename(`./images/domicil/${photo.name}`, `./images/domicil/recycle/${photo.name}`);
+        if (!newPhotoNames.includes(photo.name)) {
+            await fs.rename(`./images/domicil/${photo.base}`, `./images/domicil/recycle/${photo.base}`);
             recycled++;
         }
     }
