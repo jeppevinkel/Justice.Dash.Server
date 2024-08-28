@@ -23,13 +23,13 @@ async function fetchImages() {
 }
 
 async function cleanPhotos(newPhotos) {
-    const oldPhotos = await fs.readdir('./images/domicil', {withFileTypes: false});
+    const oldPhotos = (await fs.readdir('./images/domicil', {withFileTypes: true})).filter(it => it.isFile());
     const newPhotoNames = newPhotos.map(it => it.imageUpdateDate);
     let recycled = 0;
 
     for (const photo of oldPhotos) {
-        if (!newPhotoNames.includes(photo)) {
-            await fs.rename(`./images/domicil/${photo}.png`, `./images/domicil/recycle/${photo}.png`);
+        if (!newPhotoNames.includes(photo.name)) {
+            await fs.rename(`./images/domicil/${photo.name}`, `./images/domicil/recycle/${photo.name}`);
             recycled++;
         }
     }
