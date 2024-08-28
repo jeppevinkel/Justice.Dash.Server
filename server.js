@@ -57,7 +57,7 @@ function run() {
     app.use(express.json());
 
     app.use('/images/domicil/latest', async (req, res) => {
-        const files = await fs.readdir('./images/domicil', {withFileTypes: true});
+        const files = (await fs.readdir('./images/domicil', {withFileTypes: true})).filter(it => it.isFile());
 
         files.sort((a, b) => {
             const nameA = a.name.toUpperCase(); // ignore upper and lowercase
