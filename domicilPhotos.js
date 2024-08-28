@@ -28,7 +28,7 @@ async function cleanPhotos(newPhotos) {
     let recycled = 0;
 
     for (const photo of oldPhotos) {
-        if (!newPhotoNames.contains(photo.imageUpdateDate)) {
+        if (!newPhotoNames.includes(photo)) {
             await fs.rename(`./images/domicil/${photo}.png`, `./images/domicil/recycle/${photo}.png`);
             recycled++;
         }
