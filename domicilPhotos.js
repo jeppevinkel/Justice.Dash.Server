@@ -28,7 +28,9 @@ async function cleanPhotos(newPhotos) {
     const newPhotoNames = newPhotos.map(it => it.imageUpdateDate);
     let recycled = 0;
 
+    console.log(newPhotoNames);
     for (const photo of oldPhotos) {
+        console.log('Checking to recycle', photo.name);
         if (!newPhotoNames.includes(photo.name)) {
             await fs.rename(`./images/domicil/${photo.base}`, `./images/domicil/recycle/${photo.base}`);
             recycled++;
