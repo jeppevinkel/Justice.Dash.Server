@@ -76,6 +76,30 @@ function run() {
         return res.redirect(`${process.env.PUBLIC_ADDRESS}/images/domicil/${files[0].name}`);
     });
 
+    app.use('/images/domicil/secondlatest', async (req, res) => {
+        const files = (await fs.readdir('./images/domicil', {withFileTypes: true})).filter(it => it.isFile());
+
+        files.sort((a, b) => {
+            const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+            const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+            if (nameA < nameB) {
+                return 1;
+            }
+            if (nameA > nameB) {
+                return -1;
+            }
+
+            // names must be equal
+            return 0;
+        })
+
+        if (files.length > 1) {
+            return res.redirect(`${process.env.PUBLIC_ADDRESS}/images/domicil/${files[1].name}`);
+        }
+
+        return res.redirect(`${process.env.PUBLIC_ADDRESS}/images/domicil/${files[0].name}`);
+    });
+
     app.use('/images', express.static('images'));
 
     app.get('/menu', async (req, res) => {
